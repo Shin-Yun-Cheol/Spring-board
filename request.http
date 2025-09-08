@@ -1,0 +1,71 @@
+### 회원가입 (성공)
+POST http://localhost:8080/api/users/signup
+Content-Type: application/json
+
+{
+  "email": "email@urssu.com",
+  "password": "password",
+  "username": "username"
+}
+
+###
+
+### 회원가입 (중복 이메일 → 400 에러 예상)
+POST http://localhost:8080/api/users/signup
+Content-Type: application/json
+
+{
+  "email": "email@urssu.com",
+  "password": "anotherpass",
+  "username": "anothername"
+}
+
+###
+
+### 게시글 작성 (성공)
+POST http://localhost:8080/api/posts
+Content-Type: application/json
+
+{
+  "email": "email@urssu.com",
+  "password": "password",
+  "title": "title",
+  "content": "content"
+}
+
+###
+
+### 게시글 작성 (실패: title 공백)
+POST http://localhost:8080/api/posts
+Content-Type: application/json
+
+{
+  "email": "email@urssu.com",
+  "password": "password",
+  "title": " ",
+  "content": "content"
+}
+
+###
+
+### 수정 요청
+PUT http://localhost:8080/api/posts/1
+Content-Type: application/json
+
+{
+  "email": "email@urssu.com",
+  "password": "password",
+  "title": "수정된 제목",
+  "content": "수정된 본문"
+}
+
+###
+
+### 삭제 요청
+DELETE http://localhost:8080/api/posts/1
+Content-Type: application/json
+
+{
+  "email": "email@urssu.com",
+  "password": "password"
+}
