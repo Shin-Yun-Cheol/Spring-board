@@ -4,7 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import mission.post.dto.CreatePostRequest;
 import mission.post.dto.PostCreateResponse;
-import mission.post.dto.UpdatePostRequest;
+import mission.post.dto.PostUpdateRequest;
 import mission.user.User;
 import mission.user.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -35,7 +35,7 @@ public class PostService {
     }
 
     @Transactional
-    public PostCreateResponse update(Long id, UpdatePostRequest updatePostRequeset){
+    public PostCreateResponse update(Long id, PostUpdateRequest updatePostRequeset){
         Post post = postRepository.findById(id)
                 .orElseThrow(()->new IllegalArgumentException("post not found"));
 
