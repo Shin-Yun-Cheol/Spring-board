@@ -1,4 +1,4 @@
-package mission.common;
+package mission.Exception;
 
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
