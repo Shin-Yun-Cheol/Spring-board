@@ -1,7 +1,7 @@
 package mission.comment.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public record CommentUpdateRequest(
-        String email,
-        String password,
-        String content
+        @NotBlank String content
 ) {}
