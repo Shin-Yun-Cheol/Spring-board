@@ -35,15 +35,15 @@ public class PostService {
     }
 
     @Transactional
-    public PostCreateResponse update(Long id, PostUpdateRequest updatePostRequeset){
+    public PostCreateResponse update(Long id, PostUpdateRequest updatePostRequest){
         Post post = postRepository.findById(id)
                 .orElseThrow(()->new IllegalArgumentException("post not found"));
 
-        if(!post.getAuthor().getEmail().equals(updatePostRequeset.email()) || !BCrypt.checkpw(updatePostRequeset.password(), post.getAuthor().getPasswordHash())){
+        if(!post.getAuthor().getEmail().equals(updatePostRequest.email()) || !BCrypt.checkpw(updatePostRequest.password(), post.getAuthor().getPasswordHash())){
             throw new IllegalArgumentException("email or password does not match");
         }
 
-        post.edit(updatePostRequeset.title(), updatePostRequeset.content());
+        post.edit(updatePostRequest.title(), updatePostRequest.content());
 
         return new PostCreateResponse(
                 post.getId(),
