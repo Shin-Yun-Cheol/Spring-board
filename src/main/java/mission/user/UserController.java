@@ -1,12 +1,11 @@
 package mission.user;
 
 import lombok.RequiredArgsConstructor;
+import mission.user.dto.DeleteUserRequest;
 import mission.user.dto.SignUpRequest;
 import mission.user.dto.SignUpResponse;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -18,5 +17,11 @@ public class UserController {
     @PostMapping("/signup")
     public SignUpResponse signup(@RequestBody SignUpRequest request){
         return userService.signup(request);
+    }
+
+    @DeleteMapping("/me")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMe(@RequestBody DeleteUserRequest request){
+        userService.deleteAccount(request);
     }
 }

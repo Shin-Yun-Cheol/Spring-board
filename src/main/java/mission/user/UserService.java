@@ -2,6 +2,7 @@ package mission.user;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import mission.user.dto.DeleteUserRequest;
 import mission.user.dto.SignUpRequest;
 import mission.user.dto.SignUpResponse;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -27,5 +28,17 @@ public class UserService {
                         .build()
         );
         return new SignUpResponse(saved.getEmail(), saved.getUsername());
+    }
+
+    @Transactional
+    public void deleteAccount(DeleteUserRequest deleteRequest) {
+        User user = userRepository.findByEmail(deleteRequest.email())
+                .orElseThrow(() -> new IllegalArgumentException("email not found"));
+
+        if(!BCrypt.checkpw(deleteRequest.password(), user.getPasswordHash())){
+            throw new IllegalArgumentException("password does not match");
+        }
+
+        userRepository.delete(user);
     }
 }

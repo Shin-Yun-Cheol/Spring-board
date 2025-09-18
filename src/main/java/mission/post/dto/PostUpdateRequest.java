@@ -2,7 +2,7 @@ package mission.post.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record UpdatePostRequest(
+public record PostUpdateRequest(
         String email,
         String password,
         @NotBlank String title,

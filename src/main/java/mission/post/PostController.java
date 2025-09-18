@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import mission.post.dto.CreatePostRequest;
 import mission.post.dto.PostCreateResponse;
-import mission.post.dto.UpdatePostRequest;
+import mission.post.dto.PostUpdateRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +22,7 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public PostCreateResponse update(@PathVariable Long id, @RequestBody @Valid UpdatePostRequest updatePostRequest) {
+    public PostCreateResponse update(@PathVariable Long id, @RequestBody @Valid PostUpdateRequest updatePostRequest) {
         return postService.update(id, updatePostRequest);
     }
 
