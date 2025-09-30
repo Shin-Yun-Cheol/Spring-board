@@ -3,30 +3,30 @@ package mission.post.business;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import mission.post.domain.Post;
-import mission.post.repository.PostRepository;
+import mission.post.implement.PostReader;
+import mission.post.implement.PostWriter;
 import mission.post.dto.CreatePostRequest;
 import mission.post.dto.PostCreateResponse;
 import mission.post.dto.UpdatePostRequest;
 import mission.user.domain.User;
-import mission.user.repository.UserRepository;
-import org.springframework.security.crypto.bcrypt.BCrypt;
+import mission.user.implement.AuthVerifier;
+import mission.user.implement.UserReader;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
-    private final PostRepository postRepository;
-    private final UserRepository userRepository;
-
+    private final PostReader postReader;
+    private final PostWriter postWriter;
+    private final UserReader userReader;
+    private final AuthVerifier authVerifier;
 
     @Transactional
     public PostCreateResponse create(CreatePostRequest createPostRequest) {
-        User author = userRepository.findByEmail(createPostRequest.email())
-                .orElseThrow(()->new IllegalArgumentException("email or password not found"));
-        if (!BCrypt.checkpw(createPostRequest.password(), author.getPasswordHash()))
-            throw new IllegalArgumentException("email or password does not match");
+        User author = userReader.getByEmail(createPostRequest.email());
+        authVerifier.verifyUserEmailAndPassword(author, createPostRequest.email(), createPostRequest.password());
 
-        Post saved = postRepository.save(
+        Post saved = postWriter.save(
                 Post.builder()
                         .title(createPostRequest.title())
                         .content(createPostRequest.content())
@@ -39,12 +39,9 @@ public class PostService {
 
     @Transactional
     public PostCreateResponse update(Long id, UpdatePostRequest updatePostRequest){
-        Post post = postRepository.findById(id)
-                .orElseThrow(()->new IllegalArgumentException("post not found"));
+        Post post = postReader.getById(id);
 
-        if(!post.getAuthor().getEmail().equals(updatePostRequest.email()) || !BCrypt.checkpw(updatePostRequest.password(), post.getAuthor().getPasswordHash())){
-            throw new IllegalArgumentException("email or password does not match");
-        }
+        authVerifier.verifyUserEmailAndPassword(post.getAuthor(), updatePostRequest.email(), updatePostRequest.password());
 
         post.edit(updatePostRequest.title(), updatePostRequest.content());
 
@@ -57,13 +54,10 @@ public class PostService {
     }
     @Transactional
     public void delete(Long id, String email, String password){
-        Post post = postRepository.findById(id)
-                .orElseThrow(()->new IllegalArgumentException("post not found"));
+        Post post = postReader.getById(id);
 
-        if(!post.getAuthor().getEmail().equals(email) || !BCrypt.checkpw(password, post.getAuthor().getPasswordHash())){
-            throw new IllegalArgumentException("email or password does not match");
-        }
+        authVerifier.verifyUserEmailAndPassword(post.getAuthor(), email, password);
 
-        postRepository.delete(post);
+        postWriter.delete(post);
     }
 }
