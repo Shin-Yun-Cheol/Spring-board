@@ -1,6 +1,7 @@
-package mission.user;
+package mission.user.application;
 
 import lombok.RequiredArgsConstructor;
+import mission.user.implement.UserServiceImpl;
 import mission.user.dto.SignUpRequest;
 import mission.user.dto.SignUpResponse;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
 
     @PostMapping("/signup")
     public SignUpResponse signup(@RequestBody SignUpRequest request){
-        return userService.signup(request);
+        return userServiceImpl.signup(request);
     }
 }

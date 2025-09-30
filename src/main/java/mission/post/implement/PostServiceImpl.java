@@ -1,21 +1,25 @@
-package mission.post;
+package mission.post.implement;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import mission.post.domain.Post;
+import mission.post.repository.PostRepository;
 import mission.post.dto.CreatePostRequest;
 import mission.post.dto.PostCreateResponse;
 import mission.post.dto.UpdatePostRequest;
-import mission.user.User;
-import mission.user.UserRepository;
+import mission.post.business.PostService;
+import mission.user.domain.User;
+import mission.user.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class PostService {
+public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
+    @Override
     @Transactional
     public PostCreateResponse create(CreatePostRequest createPostRequest) {
         User author = userRepository.findByEmail(createPostRequest.email())
@@ -34,16 +38,17 @@ public class PostService {
         return new PostCreateResponse(saved.getId(), author.getEmail(), saved.getTitle(), saved.getContent());
     }
 
+    @Override
     @Transactional
-    public PostCreateResponse update(Long id, UpdatePostRequest updatePostRequeset){
+    public PostCreateResponse update(Long id, UpdatePostRequest updatePostRequest){
         Post post = postRepository.findById(id)
                 .orElseThrow(()->new IllegalArgumentException("post not found"));
 
-        if(!post.getAuthor().getEmail().equals(updatePostRequeset.email()) || !BCrypt.checkpw(updatePostRequeset.password(), post.getAuthor().getPasswordHash())){
+        if(!post.getAuthor().getEmail().equals(updatePostRequest.email()) || !BCrypt.checkpw(updatePostRequest.password(), post.getAuthor().getPasswordHash())){
             throw new IllegalArgumentException("email or password does not match");
         }
 
-        post.edit(updatePostRequeset.title(), updatePostRequeset.content());
+        post.edit(updatePostRequest.title(), updatePostRequest.content());
 
         return new PostCreateResponse(
                 post.getId(),
@@ -52,7 +57,7 @@ public class PostService {
                 post.getContent()
         );
     }
-
+    @Override
     @Transactional
     public void delete(Long id, String email, String password){
         Post post = postRepository.findById(id)
