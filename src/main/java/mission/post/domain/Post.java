@@ -1,9 +1,9 @@
-package mission.post;
+package mission.post.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import mission.user.User;
+import mission.user.domain.User;
 
 @Entity
 @Table(name = "post")

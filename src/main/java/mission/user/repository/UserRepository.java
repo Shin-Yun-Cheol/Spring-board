@@ -1,5 +1,6 @@
-package mission.user;
+package mission.user.repository;
 
+import mission.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 

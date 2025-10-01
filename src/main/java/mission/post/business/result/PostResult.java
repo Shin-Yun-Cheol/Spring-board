@@ -1,8 +1,9 @@
-package mission.post.dto;
+package mission.post.business.result;
 
-public record PostCreateResponse(
+public record PostResult(
         Long articleId,
         String email,
         String title,
         String content
-) {}
+) {
+}
