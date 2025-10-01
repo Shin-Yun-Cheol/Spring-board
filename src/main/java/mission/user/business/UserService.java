@@ -2,9 +2,9 @@ package mission.user.business;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import mission.user.business.command.SignUpCommand;
+import mission.user.business.result.SignUpResult;
 import mission.user.domain.User;
-import mission.user.dto.SignUpRequest;
-import mission.user.dto.SignUpResponse;
 import mission.user.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -15,19 +15,19 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public SignUpResponse signup(SignUpRequest signUpRequest) {
-        if(userRepository.existsByEmail(signUpRequest.email())){
+    public SignUpResult signup(SignUpCommand signUpCommand) {
+        if(userRepository.existsByEmail(signUpCommand.email())){
             throw new IllegalArgumentException("email already in use");
         }
 
-        String hashedPassword = BCrypt.hashpw(signUpRequest.password(), BCrypt.gensalt());
+        String hashedPassword = BCrypt.hashpw(signUpCommand.password(), BCrypt.gensalt());
         User saved = userRepository.save(
                 User.builder()
-                        .email(signUpRequest.email())
+                        .email(signUpCommand.email())
                         .passwordHash(hashedPassword)
-                        .username(signUpRequest.username())
+                        .username(signUpCommand.username())
                         .build()
         );
-        return new SignUpResponse(saved.getEmail(), saved.getUsername());
+        return new SignUpResult(saved.getEmail(), saved.getUsername());
     }
 }
