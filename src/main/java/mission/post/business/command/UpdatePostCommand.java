@@ -1,15 +1,17 @@
 package mission.post.business.command;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public record UpdatePostCommand(
+        @NotNull
         Long id,
+        @NotBlank
         String email,
+        @NotBlank
         String password,
+        @NotBlank
         String title,
+        @NotBlank
         String content
-) {
-    public UpdatePostCommand{
-        if(id==null) throw new IllegalArgumentException("id is null");
-        if(title==null || title.isBlank()) throw new IllegalArgumentException("title is null or empty");
-        if(content==null || content.isBlank()) throw new IllegalArgumentException("content is null or empty");
-    }
-}
+) {}
