@@ -22,11 +22,7 @@ public class UserService {
 
         String hashedPassword = BCrypt.hashpw(signUpCommand.password(), BCrypt.gensalt());
         User saved = userRepository.save(
-                User.builder()
-                        .email(signUpCommand.email())
-                        .passwordHash(hashedPassword)
-                        .username(signUpCommand.username())
-                        .build()
+                User.of(signUpCommand,  hashedPassword)
         );
         return new SignUpResult(saved.getEmail(), saved.getUsername());
     }

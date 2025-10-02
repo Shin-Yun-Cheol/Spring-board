@@ -27,11 +27,7 @@ public class PostService {
         authVerifier.verifyUserEmailAndPassword(author, createPostCommand.email(), createPostCommand.password());
 
         Post saved = postWriter.save(
-                Post.builder()
-                        .title(createPostCommand.title())
-                        .content(createPostCommand.content())
-                        .author(author)
-                        .build()
+                Post.of(createPostCommand, author)
         );
 
         return new PostResult(saved.getId(), saved.getAuthor().getEmail(), saved.getTitle(), saved.getContent());

@@ -4,13 +4,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import mission.user.business.command.SignUpCommand;
 
 @Entity
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
 public class User {
 
     @Id
@@ -28,4 +28,19 @@ public class User {
     @NotBlank
     @Column(nullable = false)
     private String username;
+
+    @Builder
+    public User(String email, String passwordHash, String username) {
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.username = username;
+    }
+
+    public static User of(SignUpCommand command, String passwordHash) {
+        return User.builder()
+                .email(command.email())
+                .passwordHash(passwordHash)
+                .username(command.username())
+                .build();
+    }
 }
