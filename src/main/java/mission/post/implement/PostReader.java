@@ -3,6 +3,7 @@ package mission.post.implement;
 
 import lombok.RequiredArgsConstructor;
 import mission.post.domain.Post;
+import mission.post.exception.PostNotFoundException;
 import mission.post.repository.PostRepository;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,6 @@ public class PostReader {
 
     public Post getById(Long id) {
         return postRepository.findById(id)
-                .orElseThrow(()->new IllegalArgumentException("post not found"));
+                .orElseThrow(PostNotFoundException::new);
     }
 }

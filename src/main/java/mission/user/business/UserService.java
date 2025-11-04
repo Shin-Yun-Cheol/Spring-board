@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import mission.user.business.command.SignUpCommand;
 import mission.user.business.result.SignUpResult;
 import mission.user.domain.User;
+import mission.user.exception.EmailAlreadyUsedException;
 import mission.user.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -16,14 +17,14 @@ public class UserService {
 
     @Transactional
     public SignUpResult signup(SignUpCommand signUpCommand) {
-        if(userRepository.existsByEmail(signUpCommand.email())){
-            throw new IllegalArgumentException("email already in use");
-        }
-
         String hashedPassword = BCrypt.hashpw(signUpCommand.password(), BCrypt.gensalt());
-        User saved = userRepository.save(
-                User.of(signUpCommand,  hashedPassword)
-        );
-        return new SignUpResult(saved.getEmail(), saved.getUsername());
+        try {
+            User saved = userRepository.save(
+                    User.of(signUpCommand, hashedPassword)
+            );
+            return new SignUpResult(saved.getEmail(), saved.getUsername());
+        } catch (RuntimeException e) {
+            throw new EmailAlreadyUsedException();
+        }
     }
 }
