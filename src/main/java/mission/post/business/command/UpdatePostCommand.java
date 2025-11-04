@@ -14,4 +14,8 @@ public record UpdatePostCommand(
         String title,
         @NotBlank
         String content
-) {}
+) {
+        public static UpdatePostCommand of(Long id, String email, String password, String title, String content) {
+                return new UpdatePostCommand(id, email, password, title, content);
+        }
+}

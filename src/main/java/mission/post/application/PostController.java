@@ -22,16 +22,14 @@ public class PostController {
 
     @PostMapping
     public PostCreateResponse create(@RequestBody @Valid CreatePostRequest req) {
-        var cmd = new CreatePostCommand(req.email(), req.password(), req.title(), req.content());
-        PostResult result = postService.create(cmd);
-        return new PostCreateResponse(result.articleId(), result.email(), result.title(), result.content());
+        PostResult result = postService.create(req.toCommand());
+        return PostCreateResponse.of(result);
     }
 
     @PutMapping("/{id}")
     public PostCreateResponse update(@PathVariable Long id, @RequestBody @Valid UpdatePostRequest req) {
-        var cmd = new UpdatePostCommand(id, req.email(), req.password(), req.title(), req.content());
-        PostResult result = postService.update(cmd);
-        return new PostCreateResponse(result.articleId(), result.email(), result.title(), result.content());
+        PostResult result = postService.update(req.toCommand(id));
+        return PostCreateResponse.of(result);
     }
 
     @DeleteMapping("/{id}")

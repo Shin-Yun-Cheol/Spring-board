@@ -7,4 +7,8 @@ public record CreatePostCommand (
     String password,
     @NotBlank String title,
     @NotBlank String content
-) {}
+) {
+    public static CreatePostCommand of(String email, String password, String title, String content) {
+        return new CreatePostCommand(email, password, title, content);
+    }
+}
