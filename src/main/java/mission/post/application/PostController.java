@@ -6,8 +6,6 @@ import mission.post.business.PostService;
 import mission.post.application.dto.CreatePostRequest;
 import mission.post.application.dto.PostCreateResponse;
 import mission.post.application.dto.UpdatePostRequest;
-import mission.post.business.command.CreatePostCommand;
-import mission.post.business.command.UpdatePostCommand;
 import mission.post.business.result.PostResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
