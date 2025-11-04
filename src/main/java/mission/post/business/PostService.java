@@ -30,7 +30,7 @@ public class PostService {
                 Post.of(createPostCommand, author)
         );
 
-        return new PostResult(saved.getId(), saved.getAuthor().getEmail(), saved.getTitle(), saved.getContent());
+        return PostResult.of(saved);
     }
 
     @Transactional
@@ -39,13 +39,9 @@ public class PostService {
         authVerifier.verifyUserEmailAndPassword(post.getAuthor(), updatePostCommand.email(), updatePostCommand.password());
         post.edit(updatePostCommand.title(), updatePostCommand.content());
 
-        return new PostResult(
-                post.getId(),
-                post.getAuthor().getEmail(),
-                post.getTitle(),
-                post.getContent()
-        );
+        return PostResult.of(post);
     }
+
     @Transactional
     public void delete(Long id, String email, String password){
         Post post = postReader.getById(id);
